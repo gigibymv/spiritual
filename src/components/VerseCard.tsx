@@ -1,4 +1,4 @@
-import { Bookmark, BookmarkCheck, Share2, Copy, Check } from "lucide-react"
+import { Bookmark, BookmarkCheck, Share2, Copy, Check, PenLine } from "lucide-react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -10,6 +10,7 @@ interface VerseCardProps {
   index: number
   isFavorite: boolean
   onToggleFavorite: (reference: string, text: string) => void
+  onWritePrayer?: (reference: string, text: string) => void
 }
 
 export function VerseCard({
@@ -18,6 +19,7 @@ export function VerseCard({
   index,
   isFavorite,
   onToggleFavorite,
+  onWritePrayer,
 }: VerseCardProps) {
   const [copied, setCopied] = useState(false)
   const [showDetails, setShowDetails] = useState(index === 0)
@@ -54,7 +56,7 @@ export function VerseCard({
               </span>
               {index === 0 && (
                 <span className="text-[10px] uppercase tracking-wider text-[#C9A96E] font-medium bg-[#C9A96E]/[0.08] px-2 py-0.5 rounded-full">
-                  Recommande
+                  Recommandé
                 </span>
               )}
             </div>
@@ -120,7 +122,7 @@ export function VerseCard({
         </div>
 
         {/* Actions */}
-        <div className="px-5 pb-4 flex gap-2">
+        <div className="px-5 pb-4 flex flex-wrap gap-2">
           <Button
             variant="ghost"
             size="sm"
@@ -132,7 +134,7 @@ export function VerseCard({
             ) : (
               <Copy className="w-3 h-3 mr-1.5" />
             )}
-            {copied ? "Copie" : "Copier"}
+            {copied ? "Copié" : "Copier"}
           </Button>
           <Button
             variant="ghost"
@@ -143,6 +145,17 @@ export function VerseCard({
             <Share2 className="w-3 h-3 mr-1.5" />
             Partager
           </Button>
+          {onWritePrayer && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onWritePrayer(verse.reference, verse.text)}
+              className="text-[12px] text-[#2C3E6B]/60 hover:text-[#2C3E6B] hover:bg-[#2C3E6B]/[0.06] h-8 px-3 rounded-lg"
+            >
+              <PenLine className="w-3 h-3 mr-1.5" />
+              Écrire une prière
+            </Button>
+          )}
         </div>
       </div>
     </div>

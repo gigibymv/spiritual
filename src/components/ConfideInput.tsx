@@ -55,7 +55,7 @@ export function ConfideInput({
           className="w-full bg-[#2C3E6B] hover:bg-[#243357] text-white rounded-xl h-11 text-sm font-medium tracking-wide transition-all duration-200 disabled:opacity-40"
         >
           <Send className="w-4 h-4 mr-2.5" />
-          Chercher une parole de reconfort
+          Chercher une parole de réconfort
         </Button>
       </div>
     </div>

@@ -37,7 +37,7 @@ export function FavoritesPanel({
       {favorites.length === 0 ? (
         <div className="text-center py-16">
           <BookmarkCheck className="w-10 h-10 mx-auto mb-4 text-[#C9A96E]/20" />
-          <p className="text-sm text-[#8B7D6B]">Aucun verset sauvegarde</p>
+          <p className="text-sm text-[#8B7D6B]">Aucun verset sauvegardé</p>
           <p className="text-xs mt-1 text-[#8B7D6B]/50">
             Cliquez sur le signet d'un verset pour le sauvegarder
           </p>

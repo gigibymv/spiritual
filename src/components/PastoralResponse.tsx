@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, PenLine } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { PastoralIntro } from "@/components/PastoralIntro"
 import { VerseCard } from "@/components/VerseCard"
@@ -9,6 +9,7 @@ interface PastoralResponseProps {
   isFavorite: (reference: string) => boolean
   onToggleFavorite: (reference: string, text: string) => void
   onBack: () => void
+  onWritePrayer?: (reference?: string, text?: string) => void
 }
 
 export function PastoralResponse({
@@ -16,6 +17,7 @@ export function PastoralResponse({
   isFavorite,
   onToggleFavorite,
   onBack,
+  onWritePrayer,
 }: PastoralResponseProps) {
   return (
     <div className="space-y-5">
@@ -44,9 +46,23 @@ export function PastoralResponse({
             index={index}
             isFavorite={isFavorite(pv.verse.reference)}
             onToggleFavorite={onToggleFavorite}
+            onWritePrayer={onWritePrayer}
           />
         ))}
       </div>
+
+      {response.verses.length > 0 && onWritePrayer && (
+        <div className="text-center pt-2">
+          <Button
+            variant="ghost"
+            onClick={() => onWritePrayer()}
+            className="text-[13px] text-[#2C3E6B]/60 hover:text-[#2C3E6B] hover:bg-[#2C3E6B]/[0.06] gap-2 rounded-xl"
+          >
+            <PenLine className="w-4 h-4" />
+            Écrire une prière dans votre journal
+          </Button>
+        </div>
+      )}
 
       {response.verses.length > 0 && (
         <div className="ornament-separator pt-2">

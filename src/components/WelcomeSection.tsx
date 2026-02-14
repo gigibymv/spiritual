@@ -16,8 +16,8 @@ export function WelcomeSection({ greeting }: WelcomeSectionProps) {
           {greeting}
         </h2>
         <p className="text-[#8B7D6B] text-sm max-w-sm mx-auto leading-relaxed">
-          Confiez-moi ce qui vous preoccupe, et laissez la Parole de Dieu
-          eclairer votre chemin.
+          Confiez-moi ce qui vous préoccupe, et laissez la Parole de Dieu
+          éclairer votre chemin.
         </p>
       </div>
     </div>

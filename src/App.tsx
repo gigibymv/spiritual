@@ -9,6 +9,8 @@ import { SearchHistory } from "@/components/SearchHistory"
 import { ThinkingState } from "@/components/ThinkingState"
 import { PastoralResponse } from "@/components/PastoralResponse"
 import { FavoritesPanel } from "@/components/FavoritesPanel"
+import { JournalPanel } from "@/components/JournalPanel"
+import { AuthModal } from "@/components/AuthModal"
 import { useVerseSearch } from "@/hooks/use-verse-search"
 import { useFavorites } from "@/hooks/use-favorites"
 import { useSearchHistory } from "@/hooks/use-search-history"
@@ -18,13 +20,18 @@ import { generatePastoralResponse } from "@/lib/pastoral"
 import { categories } from "@/data/categories"
 import type { PastoralResponse as PastoralResponseType } from "@/types"
 
-type View = "home" | "thinking" | "response" | "favorites"
+type View = "home" | "thinking" | "response" | "favorites" | "journal"
 
 export default function App() {
   const [view, setView] = useState<View>("home")
   const [query, setQuery] = useState("")
   const [pastoralResponse, setPastoralResponse] =
     useState<PastoralResponseType | null>(null)
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [journalPrefillVerse, setJournalPrefillVerse] = useState<{
+    reference: string
+    text: string
+  } | null>(null)
 
   const { search, getByCategory } = useVerseSearch()
   const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites()
@@ -100,6 +107,7 @@ export default function App() {
     setView("home")
     setQuery("")
     setPastoralResponse(null)
+    setJournalPrefillVerse(null)
   }, [])
 
   const handleToggleFavorite = useCallback(
@@ -113,24 +121,44 @@ export default function App() {
     [isFavorite, removeFavorite, addFavorite]
   )
 
+  const handleWritePrayer = useCallback(
+    (reference?: string, text?: string) => {
+      if (reference && text) {
+        setJournalPrefillVerse({ reference, text })
+      } else {
+        setJournalPrefillVerse(null)
+      }
+      setView("journal")
+    },
+    []
+  )
+
   return (
     <div className="min-h-screen">
       <Header
         onShowFavorites={() => setView("favorites")}
+        onShowJournal={() => {
+          setJournalPrefillVerse(null)
+          setView("journal")
+        }}
+        onShowAuth={() => setShowAuthModal(true)}
         favoritesCount={favorites.length}
         showFavoritesButton={view !== "favorites"}
+        showJournalButton={view !== "journal"}
       />
 
       <div className="max-w-6xl mx-auto flex">
         {/* LEFT SIDEBAR — conversations (desktop only) */}
         {history.length > 0 && (
-          <aside className="hidden lg:flex w-64 xl:w-72 flex-shrink-0 border-r border-[#E5DDD0]/40 sticky top-[57px] h-[calc(100vh-57px)]">
-            <SearchHistory
-              history={history}
-              onSelect={performSearch}
-              onClear={clearHistory}
-              variant="sidebar"
-            />
+          <aside className="hidden lg:block w-64 xl:w-72 flex-shrink-0 border-r border-[#E5DDD0]/40 sticky top-[57px] h-[calc(100vh-57px)] overflow-hidden">
+            <div className="h-full flex flex-col">
+              <SearchHistory
+                history={history}
+                onSelect={performSearch}
+                onClear={clearHistory}
+                variant="sidebar"
+              />
+            </div>
           </aside>
         )}
 
@@ -148,12 +176,20 @@ export default function App() {
                 />
               )}
 
+              {view === "journal" && (
+                <JournalPanel
+                  onClose={handleBack}
+                  prefillVerse={journalPrefillVerse}
+                />
+              )}
+
               {view === "response" && pastoralResponse && (
                 <PastoralResponse
                   response={pastoralResponse}
                   isFavorite={isFavorite}
                   onToggleFavorite={handleToggleFavorite}
                   onBack={handleBack}
+                  onWritePrayer={handleWritePrayer}
                 />
               )}
 
@@ -201,13 +237,17 @@ export default function App() {
                   Traduction Louis Segond (1910) — Domaine public
                 </p>
                 <p className="text-[10px] text-[#8B7D6B]/30 mt-1">
-                  Base curatee et verifiee
+                  Base curatée et vérifiée
                 </p>
               </footer>
             </div>
           </div>
         </main>
       </div>
+
+      {showAuthModal && (
+        <AuthModal onClose={() => setShowAuthModal(false)} />
+      )}
     </div>
   )
 }

@@ -51,3 +51,14 @@ export interface SearchHistoryEntry {
   topSituationName: string
   verseCount: number
 }
+
+export interface JournalEntry {
+  id: string
+  title: string
+  content: string
+  verseReference?: string
+  verseText?: string
+  mood?: string
+  createdAt: string
+  updatedAt: string
+}

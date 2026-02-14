@@ -27,7 +27,7 @@ export function CategoryPills({ categories, onSelect }: CategoryPillsProps) {
     <div className="space-y-3 animate-reveal animate-reveal-6">
       <div className="ornament-separator">
         <span className="text-[11px] uppercase tracking-widest text-[#8B7D6B]/60 font-medium whitespace-nowrap">
-          Explorez un theme
+          Explorez un thème
         </span>
       </div>
       <div className="flex gap-2 overflow-x-auto pb-1 justify-center flex-wrap">
