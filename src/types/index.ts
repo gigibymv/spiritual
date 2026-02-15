@@ -31,6 +31,7 @@ export interface SearchResult {
 }
 
 export interface PastoralResponse {
+  userQuery: string
   introMessage: string
   keywordInsight: string | null
   verses: PastoralVerse[]

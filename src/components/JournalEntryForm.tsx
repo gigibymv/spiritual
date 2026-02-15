@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { MoodPicker } from "@/components/MoodPicker"
+import { useLanguage } from "@/contexts/LanguageContext"
 import type { JournalEntry } from "@/types"
 
 interface JournalEntryFormProps {
@@ -34,6 +35,7 @@ export function JournalEntryForm({
   const [verseText, setVerseText] = useState(
     initial?.verseText ?? prefillVerse?.text ?? ""
   )
+  const { t } = useLanguage()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -51,7 +53,7 @@ export function JournalEntryForm({
     <div className="rounded-2xl border border-[#E5DDD0] bg-[#FFFDF9] p-5 space-y-5 animate-in fade-in-0 slide-in-from-top-2 duration-200">
       <div className="flex items-center justify-between">
         <h3 className="font-serif text-lg font-semibold text-[#2A2118]">
-          {initial ? "Modifier la prière" : "Écrire une prière"}
+          {initial ? t("journal.editPrayer") : t("journal.writePrayer")}
         </h3>
         <button
           onClick={onCancel}
@@ -63,14 +65,14 @@ export function JournalEntryForm({
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input
-          placeholder="Titre (optionnel)"
+          placeholder={t("journal.titlePlaceholder")}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="bg-[#FAF7F2] border-[#E5DDD0] focus:border-[#C9A96E]/40 rounded-xl h-10 text-[14px]"
         />
 
         <Textarea
-          placeholder="Écrivez votre prière, réflexion ou pensée..."
+          placeholder={t("journal.contentPlaceholder")}
           value={content}
           onChange={(e) => setContent(e.target.value)}
           className="min-h-[120px] bg-[#FAF7F2] border-[#E5DDD0] focus:border-[#C9A96E]/40 rounded-xl text-[14px] resize-none"
@@ -79,7 +81,7 @@ export function JournalEntryForm({
 
         <div className="space-y-2">
           <p className="text-[12px] text-[#8B7D6B]/60 uppercase tracking-wider font-medium">
-            Comment vous sentez-vous ?
+            {t("journal.moodQuestion")}
           </p>
           <MoodPicker value={mood} onChange={setMood} />
         </div>
@@ -89,7 +91,7 @@ export function JournalEntryForm({
           <div className="flex items-center gap-1.5">
             <BookOpen className="w-3.5 h-3.5 text-[#C9A96E]" />
             <p className="text-[12px] text-[#8B7D6B]/60 uppercase tracking-wider font-medium">
-              Verset lié (optionnel)
+              {t("journal.linkedVerse")}
             </p>
           </div>
           {verseReference ? (
@@ -115,7 +117,7 @@ export function JournalEntryForm({
             </div>
           ) : (
             <Input
-              placeholder="Ex: Jean 3:16"
+              placeholder={t("journal.versePlaceholder")}
               value={verseReference}
               onChange={(e) => setVerseReference(e.target.value)}
               className="bg-[#FAF7F2] border-[#E5DDD0] focus:border-[#C9A96E]/40 rounded-xl h-9 text-[13px]"
@@ -130,14 +132,14 @@ export function JournalEntryForm({
             onClick={onCancel}
             className="flex-1 text-[#8B7D6B] hover:text-[#2A2118] hover:bg-[#E5DDD0]/30 rounded-xl h-10 text-sm"
           >
-            Annuler
+            {t("journal.cancel")}
           </Button>
           <Button
             type="submit"
             disabled={!content.trim()}
             className="flex-1 bg-[#2C3E6B] hover:bg-[#243357] text-white rounded-xl h-10 text-sm font-medium disabled:opacity-40"
           >
-            {initial ? "Enregistrer" : "Sauvegarder"}
+            {initial ? t("journal.update") : t("journal.save")}
           </Button>
         </div>
       </form>

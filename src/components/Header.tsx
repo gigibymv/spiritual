@@ -1,6 +1,7 @@
-import { Flame, Bookmark, BookOpen, User, LogOut } from "lucide-react"
+import { Flame, Bookmark, BookOpen, User, LogOut, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/AuthContext"
+import { useLanguage } from "@/contexts/LanguageContext"
 
 interface HeaderProps {
   onShowFavorites?: () => void
@@ -20,6 +21,7 @@ export function Header({
   showJournalButton = false,
 }: HeaderProps) {
   const { user, signOut } = useAuth()
+  const { language, setLanguage, t } = useLanguage()
 
   return (
     <header className="border-b border-[#E5DDD0]/60 bg-[#FFFDF9]/90 backdrop-blur-md sticky top-0 z-50">
@@ -31,15 +33,27 @@ export function Header({
           </div>
           <div>
             <h1 className="font-serif text-xl font-semibold tracking-tight text-[#2C3E6B] leading-none">
-              Parole & Lumière
+              {t("header.title")}
             </h1>
             <p className="text-[11px] text-[#8B7D6B] tracking-wide mt-0.5">
-              Votre guide spirituel personnel
+              {t("header.subtitle")}
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setLanguage(language === "fr" ? "en" : "fr")}
+            className="text-[#8B7D6B] hover:text-[#2C3E6B] hover:bg-[#C9A96E]/10 gap-1 px-2"
+          >
+            <Globe className="w-3.5 h-3.5" />
+            <span className="text-xs font-medium uppercase">
+              {language === "fr" ? "EN" : "FR"}
+            </span>
+          </Button>
+
           {showJournalButton && onShowJournal && (
             <Button
               variant="ghost"
@@ -48,7 +62,7 @@ export function Header({
               className="text-[#8B7D6B] hover:text-[#2C3E6B] hover:bg-[#C9A96E]/10 gap-1.5"
             >
               <BookOpen className="w-4 h-4" />
-              <span className="hidden sm:inline text-sm">Journal</span>
+              <span className="hidden sm:inline text-sm">{t("header.journal")}</span>
             </Button>
           )}
 
@@ -60,7 +74,7 @@ export function Header({
               className="text-[#8B7D6B] hover:text-[#2C3E6B] hover:bg-[#C9A96E]/10 gap-1.5 relative"
             >
               <Bookmark className="w-4 h-4" />
-              <span className="hidden sm:inline text-sm">Favoris</span>
+              <span className="hidden sm:inline text-sm">{t("header.favorites")}</span>
               {favoritesCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-[#C9A96E] text-white text-[10px] font-medium rounded-full w-4.5 h-4.5 flex items-center justify-center">
                   {favoritesCount}
@@ -89,7 +103,7 @@ export function Header({
               className="text-[#8B7D6B] hover:text-[#2C3E6B] hover:bg-[#C9A96E]/10 gap-1.5"
             >
               <User className="w-4 h-4" />
-              <span className="hidden sm:inline text-sm">Connexion</span>
+              <span className="hidden sm:inline text-sm">{t("header.login")}</span>
             </Button>
           )}
         </div>

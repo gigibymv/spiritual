@@ -3,6 +3,7 @@ import { X, Mail, Lock, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useAuth } from "@/contexts/AuthContext"
+import { useLanguage } from "@/contexts/LanguageContext"
 
 interface AuthModalProps {
   onClose: () => void
@@ -16,6 +17,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
   const [success, setSuccess] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const { signIn, signUp } = useAuth()
+  const { t } = useLanguage()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,7 +35,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
     if (result.error) {
       setError(result.error)
     } else if (mode === "signup") {
-      setSuccess("Vérifiez votre e-mail pour confirmer votre compte.")
+      setSuccess(t("auth.checkEmail"))
     } else {
       onClose()
     }
@@ -51,7 +53,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
       <div className="relative w-full max-w-sm mx-4 rounded-2xl border border-[#E5DDD0] bg-[#FFFDF9] shadow-xl p-6 space-y-5 animate-in fade-in-0 zoom-in-95 duration-200">
         <div className="flex items-center justify-between">
           <h2 className="font-serif text-xl font-semibold text-[#2A2118]">
-            {mode === "signin" ? "Se connecter" : "Créer un compte"}
+            {mode === "signin" ? t("auth.signIn") : t("auth.signUp")}
           </h2>
           <button
             onClick={onClose}
@@ -67,7 +69,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8B7D6B]/50" />
               <Input
                 type="email"
-                placeholder="Adresse e-mail"
+                placeholder={t("auth.email")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -78,7 +80,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8B7D6B]/50" />
               <Input
                 type="password"
-                placeholder="Mot de passe"
+                placeholder={t("auth.password")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -106,7 +108,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
             className="w-full bg-[#2C3E6B] hover:bg-[#243357] text-white rounded-xl h-11 text-sm font-medium"
           >
             {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-            {mode === "signin" ? "Se connecter" : "Créer mon compte"}
+            {mode === "signin" ? t("auth.signInButton") : t("auth.signUpButton")}
           </Button>
         </form>
 
@@ -119,9 +121,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
             }}
             className="text-[13px] text-[#2C3E6B]/70 hover:text-[#2C3E6B] transition-colors"
           >
-            {mode === "signin"
-              ? "Pas encore de compte ? Créer un compte"
-              : "Déjà un compte ? Se connecter"}
+            {mode === "signin" ? t("auth.noAccount") : t("auth.hasAccount")}
           </button>
         </div>
       </div>

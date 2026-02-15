@@ -2,6 +2,7 @@ import { ArrowLeft, PenLine } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { PastoralIntro } from "@/components/PastoralIntro"
 import { VerseCard } from "@/components/VerseCard"
+import { useLanguage } from "@/contexts/LanguageContext"
 import type { PastoralResponse as PastoralResponseType } from "@/types"
 
 interface PastoralResponseProps {
@@ -19,6 +20,8 @@ export function PastoralResponse({
   onBack,
   onWritePrayer,
 }: PastoralResponseProps) {
+  const { language, t } = useLanguage()
+
   return (
     <div className="space-y-5">
       <Button
@@ -28,14 +31,21 @@ export function PastoralResponse({
         className="text-[#8B7D6B] hover:text-[#2A2118] hover:bg-[#E5DDD0]/30 gap-1.5 -ml-2"
       >
         <ArrowLeft className="w-4 h-4" />
-        Nouvelle recherche
+        {t("back.home")}
       </Button>
 
       <PastoralIntro
         introMessage={response.introMessage}
         keywordInsight={response.keywordInsight}
         situationName={response.situationName}
+        userQuery={response.userQuery}
       />
+
+      {language === "en" && t("intro.versesNote") && (
+        <p className="text-[11px] text-[#8B7D6B]/50 italic text-center">
+          {t("intro.versesNote")}
+        </p>
+      )}
 
       <div className="space-y-4">
         {response.verses.map((pv, index) => (
@@ -59,7 +69,7 @@ export function PastoralResponse({
             className="text-[13px] text-[#2C3E6B]/60 hover:text-[#2C3E6B] hover:bg-[#2C3E6B]/[0.06] gap-2 rounded-xl"
           >
             <PenLine className="w-4 h-4" />
-            Écrire une prière dans votre journal
+            {t("response.writePrayer")}
           </Button>
         </div>
       )}
@@ -67,7 +77,7 @@ export function PastoralResponse({
       {response.verses.length > 0 && (
         <div className="ornament-separator pt-2">
           <span className="text-[11px] text-[#8B7D6B]/40 font-serif italic">
-            Que la paix soit avec vous
+            {t("response.peace")}
           </span>
         </div>
       )}

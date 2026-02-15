@@ -1,6 +1,7 @@
 import { Flame, Send, X } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
+import { useLanguage } from "@/contexts/LanguageContext"
 
 interface ConfideInputProps {
   value: string
@@ -15,6 +16,8 @@ export function ConfideInput({
   onSubmit,
   disabled,
 }: ConfideInputProps) {
+  const { t } = useLanguage()
+
   return (
     <div className="animate-reveal animate-reveal-3">
       <div className="relative rounded-2xl border border-[#E5DDD0] bg-[#FFFDF9] shadow-sm shadow-[#2A2118]/[0.04] p-5 space-y-4 transition-shadow duration-300 focus-within:shadow-md focus-within:shadow-[#C9A96E]/[0.08] focus-within:border-[#C9A96E]/30">
@@ -34,7 +37,7 @@ export function ConfideInput({
                   onSubmit()
                 }
               }}
-              placeholder="Parlez-moi de ce que vous vivez..."
+              placeholder={t("input.placeholder")}
               className="min-h-[80px] resize-none border-0 bg-transparent p-0 text-[15px] placeholder:text-[#8B7D6B]/40 focus-visible:ring-0 focus-visible:outline-none shadow-none"
               disabled={disabled}
             />
@@ -42,7 +45,7 @@ export function ConfideInput({
               <button
                 onClick={() => onChange("")}
                 className="absolute top-0 right-0 text-[#8B7D6B]/40 hover:text-[#2A2118] transition-colors p-0.5"
-                aria-label="Effacer"
+                aria-label={t("input.clear")}
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -55,7 +58,7 @@ export function ConfideInput({
           className="w-full bg-[#2C3E6B] hover:bg-[#243357] text-white rounded-xl h-11 text-sm font-medium tracking-wide transition-all duration-200 disabled:opacity-40"
         >
           <Send className="w-4 h-4 mr-2.5" />
-          Chercher une parole de réconfort
+          {t("input.button")}
         </Button>
       </div>
     </div>

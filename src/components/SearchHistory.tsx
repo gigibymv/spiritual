@@ -1,5 +1,6 @@
 import { Clock, Trash2, ChevronDown, ChevronUp, MessageCircle } from "lucide-react"
 import { useState } from "react"
+import { useLanguage } from "@/contexts/LanguageContext"
 import type { SearchHistoryEntry } from "@/types"
 
 interface SearchHistoryProps {
@@ -9,7 +10,7 @@ interface SearchHistoryProps {
   variant?: "sidebar" | "inline"
 }
 
-function formatRelativeTime(timestamp: string): string {
+function formatRelativeTime(timestamp: string, t: (key: string) => string): string {
   const now = Date.now()
   const then = new Date(timestamp).getTime()
   const diffMs = now - then
@@ -17,7 +18,7 @@ function formatRelativeTime(timestamp: string): string {
   const diffH = Math.floor(diffMs / 3600000)
   const diffD = Math.floor(diffMs / 86400000)
 
-  if (diffMin < 1) return "À l'instant"
+  if (diffMin < 1) return t("history.justNow")
   if (diffMin < 60) return `${diffMin} min`
   if (diffH < 24) return `${diffH}h`
   if (diffD < 7) return `${diffD}j`
@@ -34,13 +35,12 @@ export function SearchHistory({
   variant = "inline",
 }: SearchHistoryProps) {
   const [expanded, setExpanded] = useState(false)
+  const { t } = useLanguage()
 
   if (history.length === 0) return null
 
   const isSidebar = variant === "sidebar"
 
-  // Sidebar: show all in scrollable container
-  // Inline: show 3 by default, up to 8 when expanded (never dump all 20 inline)
   const visible = isSidebar
     ? history
     : expanded
@@ -54,13 +54,13 @@ export function SearchHistory({
           <div className="flex items-center gap-2">
             <MessageCircle className="w-3.5 h-3.5 text-[#C9A96E]" />
             <span className="text-[12px] font-semibold text-[#2A2118] uppercase tracking-wider">
-              Conversations
+              {t("history.conversations")}
             </span>
           </div>
           <button
             onClick={onClear}
             className="text-[11px] text-[#8B7D6B]/40 hover:text-red-400 transition-colors"
-            title="Effacer l'historique"
+            title={t("history.clearHistory")}
           >
             <Trash2 className="w-3 h-3" />
           </button>
@@ -78,11 +78,11 @@ export function SearchHistory({
               </p>
               <div className="flex items-center gap-1.5 mt-1">
                 <span className="text-[10px] text-[#8B7D6B]/50">
-                  {formatRelativeTime(entry.timestamp)}
+                  {formatRelativeTime(entry.timestamp, t)}
                 </span>
                 <span className="text-[#C9A96E]/30">·</span>
                 <span className="text-[10px] text-[#8B7D6B]/40 truncate">
-                  {entry.verseCount} verset{entry.verseCount > 1 ? "s" : ""}
+                  {entry.verseCount} {entry.verseCount > 1 ? t("history.verses") : t("history.verse")}
                 </span>
               </div>
             </button>
@@ -92,13 +92,12 @@ export function SearchHistory({
     )
   }
 
-  // Inline variant (mobile) — contained with max-height
   return (
     <div className="space-y-2 animate-reveal animate-reveal-5">
       <div className="flex items-center justify-between px-1">
         <div className="flex items-center gap-2 text-[11px] text-[#8B7D6B]/60 uppercase tracking-wider font-medium">
           <Clock className="w-3 h-3" />
-          <span>Récentes</span>
+          <span>{t("history.recent")}</span>
         </div>
         <button
           onClick={onClear}
@@ -124,7 +123,7 @@ export function SearchHistory({
                 {entry.query}
               </p>
               <span className="text-[10px] text-[#8B7D6B]/40 whitespace-nowrap flex-shrink-0">
-                {formatRelativeTime(entry.timestamp)}
+                {formatRelativeTime(entry.timestamp, t)}
               </span>
             </div>
           </button>
@@ -139,12 +138,12 @@ export function SearchHistory({
           {expanded ? (
             <>
               <ChevronUp className="w-3 h-3" />
-              Réduire
+              {t("history.collapse")}
             </>
           ) : (
             <>
               <ChevronDown className="w-3 h-3" />
-              Voir plus ({history.length})
+              {t("history.showMore")} ({history.length})
             </>
           )}
         </button>

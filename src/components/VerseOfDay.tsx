@@ -1,4 +1,5 @@
 import { Sun } from "lucide-react"
+import { useLanguage } from "@/contexts/LanguageContext"
 import type { VerseRecommendation } from "@/types"
 
 interface VerseOfDayProps {
@@ -7,6 +8,8 @@ interface VerseOfDayProps {
 }
 
 export function VerseOfDay({ verse, situationName }: VerseOfDayProps) {
+  const { t } = useLanguage()
+
   return (
     <div className="animate-reveal animate-reveal-2">
       <div className="relative rounded-2xl border border-[#C9A96E]/20 bg-gradient-to-r from-[#2C3E6B]/[0.03] via-transparent to-[#C9A96E]/[0.06] p-5 md:p-6 card-lift overflow-hidden">
@@ -16,7 +19,7 @@ export function VerseOfDay({ verse, situationName }: VerseOfDayProps) {
         <div className="relative space-y-3">
           <div className="flex items-center gap-2 text-[11px] text-[#8B7D6B] uppercase tracking-widest">
             <Sun className="w-3.5 h-3.5 text-[#C9A96E]" />
-            <span className="font-medium">Verset du jour</span>
+            <span className="font-medium">{t("verseOfDay.title")}</span>
             <span className="text-[#C9A96E]/40">•</span>
             <span className="normal-case tracking-normal text-xs">{situationName}</span>
           </div>

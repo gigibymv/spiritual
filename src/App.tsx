@@ -1,9 +1,9 @@
 import { useState, useCallback } from "react"
+import { useLanguage } from "@/contexts/LanguageContext"
 import { Header } from "@/components/Header"
 import { WelcomeSection } from "@/components/WelcomeSection"
 import { ConfideInput } from "@/components/ConfideInput"
 import { SuggestionChips } from "@/components/SuggestionChips"
-import { CategoryPills } from "@/components/CategoryPills"
 import { VerseOfDay } from "@/components/VerseOfDay"
 import { SearchHistory } from "@/components/SearchHistory"
 import { ThinkingState } from "@/components/ThinkingState"
@@ -17,7 +17,6 @@ import { useSearchHistory } from "@/hooks/use-search-history"
 import { useVerseOfDay } from "@/hooks/use-verse-of-day"
 import { useGreeting } from "@/hooks/use-greeting"
 import { generatePastoralResponse } from "@/lib/pastoral"
-import { categories } from "@/data/categories"
 import type { PastoralResponse as PastoralResponseType } from "@/types"
 
 type View = "home" | "thinking" | "response" | "favorites" | "journal"
@@ -33,11 +32,12 @@ export default function App() {
     text: string
   } | null>(null)
 
-  const { search, getByCategory } = useVerseSearch()
+  const { search } = useVerseSearch()
   const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites()
   const { history, addEntry, clearHistory } = useSearchHistory()
   const verseOfDay = useVerseOfDay()
   const greeting = useGreeting()
+  const { t } = useLanguage()
 
   const performSearch = useCallback(
     (searchQuery: string) => {
@@ -74,34 +74,6 @@ export default function App() {
   const handleSubmit = useCallback(() => {
     performSearch(query)
   }, [query, performSearch])
-
-  const handleCategorySelect = useCallback(
-    (categoryId: string) => {
-      const situations = getByCategory(categoryId)
-      if (situations.length === 0) return
-
-      const category = categories.find((c) => c.id === categoryId)
-      const categoryLabel = category?.label ?? ""
-
-      setQuery(categoryLabel)
-      setView("thinking")
-
-      setTimeout(() => {
-        const results = search(categoryLabel)
-        const allMatchedKeywords = [
-          ...new Set(results.flatMap((r) => r.matchedKeywords)),
-        ]
-        const response = generatePastoralResponse(
-          categoryLabel,
-          results,
-          allMatchedKeywords
-        )
-        setPastoralResponse(response)
-        setView("response")
-      }, 600)
-    },
-    [getByCategory, search]
-  )
 
   const handleBack = useCallback(() => {
     setView("home")
@@ -222,10 +194,6 @@ export default function App() {
                     )}
                   </div>
 
-                  <CategoryPills
-                    categories={categories}
-                    onSelect={handleCategorySelect}
-                  />
                 </>
               )}
 
@@ -234,10 +202,10 @@ export default function App() {
                   <span className="text-[10px] text-[#C9A96E]/30">✦</span>
                 </div>
                 <p className="text-[11px] text-[#8B7D6B]/40 leading-relaxed">
-                  Traduction Louis Segond (1910) — Domaine public
+                  {t("footer.translation")}
                 </p>
                 <p className="text-[10px] text-[#8B7D6B]/30 mt-1">
-                  Base curatée et vérifiée
+                  {t("footer.curated")}
                 </p>
               </footer>
             </div>

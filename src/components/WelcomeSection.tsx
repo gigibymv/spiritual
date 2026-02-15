@@ -1,10 +1,13 @@
 import { Flame } from "lucide-react"
+import { useLanguage } from "@/contexts/LanguageContext"
 
 interface WelcomeSectionProps {
   greeting: string
 }
 
 export function WelcomeSection({ greeting }: WelcomeSectionProps) {
+  const { t } = useLanguage()
+
   return (
     <div className="text-center space-y-5 py-6 animate-reveal animate-reveal-1">
       <div className="relative inline-block">
@@ -16,8 +19,7 @@ export function WelcomeSection({ greeting }: WelcomeSectionProps) {
           {greeting}
         </h2>
         <p className="text-[#8B7D6B] text-sm max-w-sm mx-auto leading-relaxed">
-          Confiez-moi ce qui vous préoccupe, et laissez la Parole de Dieu
-          éclairer votre chemin.
+          {t("welcome.subtitle")}
         </p>
       </div>
     </div>

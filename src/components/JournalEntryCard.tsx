@@ -1,5 +1,6 @@
 import { Trash2, Edit3, BookOpen } from "lucide-react"
 import { getMoodInfo } from "@/components/MoodPicker"
+import { useLanguage } from "@/contexts/LanguageContext"
 import type { JournalEntry } from "@/types"
 
 interface JournalEntryCardProps {
@@ -8,20 +9,20 @@ interface JournalEntryCardProps {
   onDelete: (id: string) => void
 }
 
-function formatDate(timestamp: string): string {
-  return new Date(timestamp).toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  })
-}
-
 export function JournalEntryCard({
   entry,
   onEdit,
   onDelete,
 }: JournalEntryCardProps) {
-  const mood = entry.mood ? getMoodInfo(entry.mood) : null
+  const { language, t } = useLanguage()
+  const mood = entry.mood ? getMoodInfo(entry.mood, t) : null
+
+  const formatDate = (timestamp: string): string => {
+    return new Date(timestamp).toLocaleDateString(
+      language === "en" ? "en-US" : "fr-FR",
+      { day: "numeric", month: "long", year: "numeric" }
+    )
+  }
 
   return (
     <div className="group rounded-2xl border border-[#E5DDD0] bg-[#FFFDF9] overflow-hidden card-lift">
@@ -53,14 +54,14 @@ export function JournalEntryCard({
             <button
               onClick={() => onEdit(entry)}
               className="p-1.5 rounded-lg hover:bg-[#C9A96E]/10 transition-colors"
-              aria-label="Modifier"
+              aria-label={t("journal.edit")}
             >
               <Edit3 className="w-3.5 h-3.5 text-[#8B7D6B]" />
             </button>
             <button
               onClick={() => onDelete(entry.id)}
               className="p-1.5 rounded-lg hover:bg-red-50 transition-colors"
-              aria-label="Supprimer"
+              aria-label={t("journal.delete")}
             >
               <Trash2 className="w-3.5 h-3.5 text-red-400" />
             </button>

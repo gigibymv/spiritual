@@ -1,6 +1,7 @@
 import { BookmarkCheck, Trash2, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { useLanguage } from "@/contexts/LanguageContext"
 import type { FavoriteVerse } from "@/hooks/use-favorites"
 
 interface FavoritesPanelProps {
@@ -14,6 +15,8 @@ export function FavoritesPanel({
   onRemove,
   onClose,
 }: FavoritesPanelProps) {
+  const { t } = useLanguage()
+
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
@@ -24,12 +27,12 @@ export function FavoritesPanel({
           className="text-[#8B7D6B] hover:text-[#2A2118] hover:bg-[#E5DDD0]/30 gap-1.5 -ml-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          Retour
+          {t("back.home")}
         </Button>
         <div className="flex items-center gap-2">
           <BookmarkCheck className="w-4 h-4 text-[#C9A96E]" />
           <h2 className="font-serif text-lg font-semibold text-[#2A2118]">
-            Favoris
+            {t("favorites.title")}
           </h2>
         </div>
       </div>
@@ -37,9 +40,9 @@ export function FavoritesPanel({
       {favorites.length === 0 ? (
         <div className="text-center py-16">
           <BookmarkCheck className="w-10 h-10 mx-auto mb-4 text-[#C9A96E]/20" />
-          <p className="text-sm text-[#8B7D6B]">Aucun verset sauvegardé</p>
+          <p className="text-sm text-[#8B7D6B]">{t("favorites.empty")}</p>
           <p className="text-xs mt-1 text-[#8B7D6B]/50">
-            Cliquez sur le signet d'un verset pour le sauvegarder
+            {t("favorites.emptyHint")}
           </p>
         </div>
       ) : (
@@ -62,7 +65,7 @@ export function FavoritesPanel({
                   <button
                     onClick={() => onRemove(fav.reference)}
                     className="p-1.5 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-red-50 transition-all"
-                    aria-label="Supprimer"
+                    aria-label={t("favorites.remove")}
                   >
                     <Trash2 className="w-3.5 h-3.5 text-red-400" />
                   </button>

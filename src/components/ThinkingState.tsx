@@ -1,6 +1,9 @@
 import { Flame } from "lucide-react"
+import { useLanguage } from "@/contexts/LanguageContext"
 
 export function ThinkingState() {
+  const { t } = useLanguage()
+
   return (
     <div className="flex flex-col items-center justify-center py-24 space-y-8 animate-reveal animate-reveal-1">
       <div className="relative">
@@ -10,7 +13,7 @@ export function ThinkingState() {
 
       <div className="space-y-3 text-center">
         <p className="font-serif text-xl italic text-[#2A2118]/70">
-          Je cherche dans la Parole pour vous...
+          {t("thinking.message")}
         </p>
         <div className="flex items-center justify-center gap-1.5 pt-1">
           <div className="w-2 h-2 rounded-full bg-[#C9A96E] thinking-dot-1" />

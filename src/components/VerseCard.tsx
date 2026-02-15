@@ -2,6 +2,7 @@ import { Bookmark, BookmarkCheck, Share2, Copy, Check, PenLine } from "lucide-re
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { useLanguage } from "@/contexts/LanguageContext"
 import type { VerseRecommendation } from "@/types"
 
 interface VerseCardProps {
@@ -23,6 +24,7 @@ export function VerseCard({
 }: VerseCardProps) {
   const [copied, setCopied] = useState(false)
   const [showDetails, setShowDetails] = useState(index === 0)
+  const { t } = useLanguage()
 
   const handleCopy = async () => {
     const textToCopy = `${verse.reference}\n\n"${verse.text}"\n\n${verse.explanation}`
@@ -56,7 +58,7 @@ export function VerseCard({
               </span>
               {index === 0 && (
                 <span className="text-[10px] uppercase tracking-wider text-[#C9A96E] font-medium bg-[#C9A96E]/[0.08] px-2 py-0.5 rounded-full">
-                  Recommandé
+                  {t("verse.recommended")}
                 </span>
               )}
             </div>
@@ -64,7 +66,7 @@ export function VerseCard({
               onClick={() => onToggleFavorite(verse.reference, verse.text)}
               className="p-1.5 rounded-lg hover:bg-[#C9A96E]/10 transition-colors"
               aria-label={
-                isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"
+                isFavorite ? t("verse.removeFavorite") : t("verse.addFavorite")
               }
             >
               {isFavorite ? (
@@ -95,7 +97,7 @@ export function VerseCard({
             onClick={() => setShowDetails(!showDetails)}
             className="text-[13px] text-[#2C3E6B]/70 hover:text-[#2C3E6B] font-medium transition-colors"
           >
-            {showDetails ? "Masquer l'explication ↑" : "Lire l'explication →"}
+            {showDetails ? t("verse.hideExplanation") : t("verse.showExplanation")}
           </button>
 
           {showDetails && (
@@ -103,7 +105,7 @@ export function VerseCard({
               <Separator className="bg-[#E5DDD0]/60" />
               <div>
                 <h4 className="text-xs font-semibold uppercase tracking-wider text-[#8B7D6B] mb-2">
-                  Comprendre ce verset
+                  {t("verse.understand")}
                 </h4>
                 <p className="text-[13px] text-[#8B7D6B] leading-relaxed">
                   {verse.explanation}
@@ -111,7 +113,7 @@ export function VerseCard({
               </div>
               <div className="bg-[#FAF7F2] rounded-xl p-4 border border-[#E5DDD0]/40">
                 <h4 className="text-xs font-semibold uppercase tracking-wider text-[#8B7D6B] mb-2">
-                  Comment l'appliquer
+                  {t("verse.apply")}
                 </h4>
                 <p className="text-[13px] text-[#8B7D6B] leading-relaxed">
                   {verse.application}
@@ -134,7 +136,7 @@ export function VerseCard({
             ) : (
               <Copy className="w-3 h-3 mr-1.5" />
             )}
-            {copied ? "Copié" : "Copier"}
+            {copied ? t("verse.copied") : t("verse.copy")}
           </Button>
           <Button
             variant="ghost"
@@ -143,7 +145,7 @@ export function VerseCard({
             className="text-[12px] text-[#8B7D6B]/60 hover:text-[#2A2118] hover:bg-[#E5DDD0]/30 h-8 px-3 rounded-lg"
           >
             <Share2 className="w-3 h-3 mr-1.5" />
-            Partager
+            {t("verse.share")}
           </Button>
           {onWritePrayer && (
             <Button
@@ -153,7 +155,7 @@ export function VerseCard({
               className="text-[12px] text-[#2C3E6B]/60 hover:text-[#2C3E6B] hover:bg-[#2C3E6B]/[0.06] h-8 px-3 rounded-lg"
             >
               <PenLine className="w-3 h-3 mr-1.5" />
-              Écrire une prière
+              {t("verse.writePrayer")}
             </Button>
           )}
         </div>
