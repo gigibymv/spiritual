@@ -1,5 +1,6 @@
 import type { PastoralResponse, PastoralVerse, SearchResult } from "@/types"
-import { keywordPhrases } from "@/data/pastoral-phrases"
+import { keywordPhrases, keywordPhrasesEn } from "@/data/pastoral-phrases"
+import type { Language } from "@/data/translations"
 
 /**
  * Normalise un texte pour la comparaison :
@@ -29,7 +30,7 @@ function hashCode(str: string): number {
  * Echo templates — deterministically selected by query hash.
  * These echo the user's keywords back to them in a personal way.
  */
-const echoTemplates = [
+const echoTemplatesFr = [
   (kw: string) =>
     `Vous parlez de « ${kw} », et ce sentiment est profondément humain.`,
   (kw: string) =>
@@ -52,6 +53,29 @@ const echoTemplates = [
     `Le sujet de « ${kw} » que vous abordez est au cœur de nombreux passages bibliques.`,
 ]
 
+const echoTemplatesEn = [
+  (kw: string) =>
+    `You're speaking about "${kw}", and this feeling is deeply human.`,
+  (kw: string) =>
+    `You're going through something related to "${kw}" — God sees your heart.`,
+  (kw: string) =>
+    `Your concern about "${kw}" resonates with many believers.`,
+  (kw: string) =>
+    `What you're expressing about "${kw}" deserves to be heard.`,
+  (kw: string) =>
+    `The question of "${kw}" that you raise touches the heart of the human experience.`,
+  (kw: string) =>
+    `You're not alone in feeling this way about "${kw}".`,
+  (kw: string) =>
+    `What you're experiencing with "${kw}" is a trial that God understands.`,
+  (kw: string) =>
+    `Talking about "${kw}" takes courage — and it's an important first step.`,
+  (kw: string) =>
+    `Your questioning about "${kw}" shows a sincere search for answers.`,
+  (kw: string) =>
+    `The topic of "${kw}" is at the heart of many biblical passages.`,
+]
+
 /**
  * Builds a personalized intro that echoes back the user's keywords
  * before appending the situation's random pastoral intro.
@@ -59,7 +83,8 @@ const echoTemplates = [
 function buildPersonalizedIntro(
   query: string,
   situationIntro: string,
-  matchedKeywords: string[]
+  matchedKeywords: string[],
+  language: Language
 ): string {
   if (matchedKeywords.length === 0) return situationIntro
 
@@ -67,6 +92,8 @@ function buildPersonalizedIntro(
   const primaryKeyword = [...matchedKeywords].sort(
     (a, b) => b.length - a.length
   )[0]
+
+  const echoTemplates = language === "en" ? echoTemplatesEn : echoTemplatesFr
 
   // Deterministically select an echo template based on query hash
   const templateIndex = hashCode(query) % echoTemplates.length
@@ -82,7 +109,8 @@ function buildPersonalizedIntro(
 function selectConnectionMessage(
   connectionTemplates: Record<string, string>,
   matchedKeywords: string[],
-  query: string
+  query: string,
+  language: Language
 ): string {
   const normalizedMatched = matchedKeywords.map(normalize)
 
@@ -103,13 +131,21 @@ function selectConnectionMessage(
 
   // When falling back to default, add contextual phrasing based on query
   if (defaultMsg && query) {
-    const contextPrefixes = [
-      "Dans votre situation, ",
-      "Face à ce que vous vivez, ",
-      "Pour répondre à votre préoccupation, ",
-      "En lien avec ce que vous traversez, ",
-      "Pour éclairer votre questionnement, ",
-    ]
+    const contextPrefixes = language === "en"
+      ? [
+          "In your situation, ",
+          "Facing what you're going through, ",
+          "To address your concern, ",
+          "In connection with what you're experiencing, ",
+          "To shed light on your questioning, ",
+        ]
+      : [
+          "Dans votre situation, ",
+          "Face à ce que vous vivez, ",
+          "Pour répondre à votre préoccupation, ",
+          "En lien avec ce que vous traversez, ",
+          "Pour éclairer votre questionnement, ",
+        ]
     const prefixIndex = hashCode(query) % contextPrefixes.length
     const prefix = contextPrefixes[prefixIndex]
     // Lowercase the first letter of the default message to append it
@@ -125,11 +161,13 @@ function selectConnectionMessage(
  * Trouve la première phrase empathique correspondant aux mots-clés matchés
  * dans le dictionnaire global keywordPhrases.
  */
-function findKeywordInsight(matchedKeywords: string[]): string | null {
+function findKeywordInsight(matchedKeywords: string[], language: Language): string | null {
+  const phrases = language === "en" ? keywordPhrasesEn : keywordPhrases
+
   for (const keyword of matchedKeywords) {
     const normalizedKeyword = normalize(keyword)
 
-    for (const [phraseKey, phrase] of Object.entries(keywordPhrases)) {
+    for (const [phraseKey, phrase] of Object.entries(phrases)) {
       const normalizedPhraseKey = normalize(phraseKey)
       if (
         normalizedKeyword.includes(normalizedPhraseKey) ||
@@ -149,13 +187,16 @@ function findKeywordInsight(matchedKeywords: string[]): string | null {
 export function generatePastoralResponse(
   query: string,
   results: SearchResult[],
-  matchedKeywords: string[]
+  matchedKeywords: string[],
+  language: Language = "fr"
 ): PastoralResponse {
   if (results.length === 0) {
+    const noResultsMessage = language === "en"
+      ? "I couldn't find an exact match for your search, but know that God hears every prayer, even those we can't put into words. Feel free to rephrase your question or explore the suggested topics."
+      : "Je n'ai pas trouvé de situation correspondant exactement à votre recherche, mais sachez que Dieu entend chaque prière, même celles que nous ne savons pas formuler. N'hésitez pas à reformuler votre question ou à explorer les suggestions proposées."
     return {
       userQuery: query,
-      introMessage:
-        "Je n'ai pas trouvé de situation correspondant exactement à votre recherche, mais sachez que Dieu entend chaque prière, même celles que nous ne savons pas formuler. N'hésitez pas à reformuler votre question ou à explorer les suggestions proposées.",
+      introMessage: noResultsMessage,
       keywordInsight: null,
       verses: [],
       situationName: "",
@@ -176,11 +217,12 @@ export function generatePastoralResponse(
   const introMessage = buildPersonalizedIntro(
     query,
     situationIntro,
-    matchedKeywords
+    matchedKeywords,
+    language
   )
 
   // Look up keyword insight from the global dictionary
-  const keywordInsight = findKeywordInsight(matchedKeywords)
+  const keywordInsight = findKeywordInsight(matchedKeywords, language)
 
   // Collect verses from the top 2 situations, with their context
   const verseCandidates: {
@@ -225,7 +267,8 @@ export function generatePastoralResponse(
     connectionMessage: selectConnectionMessage(
       candidate.verse.connectionTemplates,
       candidate.matchedKeywords,
-      query
+      query,
+      language
     ),
     situationId: candidate.situationId,
   }))

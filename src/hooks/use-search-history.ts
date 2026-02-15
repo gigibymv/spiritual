@@ -85,6 +85,22 @@ export function useSearchHistory() {
     [user]
   )
 
+  const deleteEntry = useCallback(
+    (id: string) => {
+      setHistory((prev) => prev.filter((entry) => entry.id !== id))
+
+      if (user && supabase) {
+        supabase
+          .from("search_history")
+          .delete()
+          .eq("id", id)
+          .eq("user_id", user.id)
+          .then()
+      }
+    },
+    [user]
+  )
+
   const clearHistory = useCallback(() => {
     setHistory([])
 
@@ -97,5 +113,5 @@ export function useSearchHistory() {
     }
   }, [user])
 
-  return { history, addEntry, clearHistory }
+  return { history, addEntry, deleteEntry, clearHistory }
 }

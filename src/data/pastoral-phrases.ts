@@ -69,3 +69,95 @@ export const keywordPhrases: Record<string, string> = {
   rivalite:
     "La rivalité épuise, mais Dieu vous invite à courir votre propre course, pas celle des autres.",
 }
+
+/**
+ * English keyword-to-insight dictionary for English-speaking users.
+ */
+export const keywordPhrasesEn: Record<string, string> = {
+  future:
+    "Uncertainty about the future is one of the deepest sources of anxiety.",
+  work:
+    "Professional difficulties touch on our identity and sense of security.",
+  family:
+    "Family wounds are among the most painful, because they come from those we love.",
+  loneliness:
+    "Feeling alone is a silent pain that many people don't understand.",
+  death: "Facing the reality of death, human words are often insufficient.",
+  money:
+    "Financial stress affects every aspect of daily life.",
+  illness:
+    "Illness reminds us of our fragility and our need for God.",
+  doubt:
+    "Doubt is not the enemy of faith — it is often the path to deeper faith.",
+  forgiveness:
+    "Forgiving is one of the most difficult and most liberating acts there is.",
+  fear: "Fear is a human emotion that God does not condemn — He wants to free you from it.",
+  anger:
+    "Anger can be legitimate, but it becomes destructive when it consumes us.",
+  depression:
+    "The distress of the soul is a reality that God takes seriously.",
+  marriage:
+    "Difficulties in marriage are among the most intimate trials.",
+  children:
+    "Concern for our children reveals the depth of our love for them.",
+  health:
+    "When the body suffers, the soul needs a deeper anchor.",
+  failure:
+    "Failure is not an end — it is often the soil for new growth.",
+  betrayal:
+    "Betrayal hurts all the more because it comes from someone we trusted.",
+  guilt:
+    "The weight of guilt can be crushing, but God's grace is greater.",
+  stress:
+    "Prolonged stress exhausts body and mind, but God offers true rest.",
+  decision:
+    "Before a difficult choice, God's wisdom is available to those who ask.",
+  divorce:
+    "The breaking of a marriage bond is a deep wound that God understands.",
+  grief: "Grief is a path that no one should walk alone.",
+  addiction:
+    "The chains of addiction are not stronger than the power of God.",
+  injustice:
+    "Injustice outrages us, but God sees what people ignore.",
+  rejection: "Rejection strikes at the heart of our need to be loved and accepted.",
+  insomnia:
+    "Sleepless nights are moments when the mind stirs, but God watches over you when you cannot sleep.",
+  anxiety:
+    "Anxiety is a signal that our heart needs to rest in God.",
+  despair:
+    "Even in the deepest darkness, a light can break through.",
+  confusion:
+    "In confusion, God offers clarity to those who humbly seek it.",
+  bitterness:
+    "Bitterness is a poison we drink hoping the other person will suffer.",
+  jealousy:
+    "Jealousy is a silent admission of what we deeply desire — God wants to fill that void differently.",
+  envy:
+    "Envy makes us look at other people's lives instead of seeing the blessings God has placed in ours.",
+  comparison:
+    "Comparing ourselves to others is a trap that steals our joy — God has a unique plan for each of us.",
+  rivalry:
+    "Rivalry is exhausting, but God invites you to run your own race, not someone else's.",
+  lonely:
+    "Feeling lonely is a silent pain that many don't understand.",
+  sad:
+    "Sadness is a natural emotion — even Jesus wept. God is close to the brokenhearted.",
+  angry:
+    "Anger can be legitimate, but it becomes destructive when it consumes us.",
+  afraid:
+    "Fear is a human emotion that God does not condemn — He wants to free you from it.",
+  suffering:
+    "Suffering can feel overwhelming, but God is near to those who are broken.",
+  pain:
+    "Pain, whether physical or emotional, is something God deeply understands.",
+  hope:
+    "Hope is the anchor of the soul — even when circumstances seem dark, God's promises remain true.",
+  love:
+    "Love is at the heart of God's character, and He desires for you to know His love deeply.",
+  shame:
+    "Shame tells us we are not enough, but God says you are His beloved child.",
+  tired:
+    "When you are weary and exhausted, God invites you to find rest in Him.",
+  weak:
+    "In our weakness, God's strength is made perfect.",
+}

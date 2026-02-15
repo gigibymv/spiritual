@@ -1,4 +1,4 @@
-import { Clock, Trash2, ChevronDown, ChevronUp, MessageCircle } from "lucide-react"
+import { Clock, Trash2, ChevronDown, ChevronUp, MessageCircle, PanelLeftClose, X } from "lucide-react"
 import { useState } from "react"
 import { useLanguage } from "@/contexts/LanguageContext"
 import type { SearchHistoryEntry } from "@/types"
@@ -7,10 +7,12 @@ interface SearchHistoryProps {
   history: SearchHistoryEntry[]
   onSelect: (query: string) => void
   onClear: () => void
+  onDelete?: (id: string) => void
+  onClose?: () => void
   variant?: "sidebar" | "inline"
 }
 
-function formatRelativeTime(timestamp: string, t: (key: string) => string): string {
+function formatRelativeTime(timestamp: string, t: (key: string) => string, language: string): string {
   const now = Date.now()
   const then = new Date(timestamp).getTime()
   const diffMs = now - then
@@ -21,8 +23,9 @@ function formatRelativeTime(timestamp: string, t: (key: string) => string): stri
   if (diffMin < 1) return t("history.justNow")
   if (diffMin < 60) return `${diffMin} min`
   if (diffH < 24) return `${diffH}h`
-  if (diffD < 7) return `${diffD}j`
-  return new Date(timestamp).toLocaleDateString("fr-FR", {
+  if (diffD < 7) return `${diffD}${t("time.days")}`
+  const locale = language === "en" ? "en-US" : "fr-FR"
+  return new Date(timestamp).toLocaleDateString(locale, {
     day: "numeric",
     month: "short",
   })
@@ -32,10 +35,12 @@ export function SearchHistory({
   history,
   onSelect,
   onClear,
+  onDelete,
+  onClose,
   variant = "inline",
 }: SearchHistoryProps) {
   const [expanded, setExpanded] = useState(false)
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   if (history.length === 0) return null
 
@@ -57,35 +62,62 @@ export function SearchHistory({
               {t("history.conversations")}
             </span>
           </div>
-          <button
-            onClick={onClear}
-            className="text-[11px] text-[#8B7D6B]/40 hover:text-red-400 transition-colors"
-            title={t("history.clearHistory")}
-          >
-            <Trash2 className="w-3 h-3" />
-          </button>
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={onClear}
+              className="text-[11px] text-[#8B7D6B]/40 hover:text-red-400 transition-colors p-1 rounded"
+              title={t("history.clearHistory")}
+            >
+              <Trash2 className="w-3 h-3" />
+            </button>
+            {onClose && (
+              <button
+                onClick={onClose}
+                className="text-[#8B7D6B]/40 hover:text-[#2A2118] transition-colors p-1 rounded"
+                title={t("history.collapse")}
+              >
+                <PanelLeftClose className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="flex-1 min-h-0 overflow-y-auto sidebar-scroll py-2 px-2">
           {visible.map((entry) => (
-            <button
+            <div
               key={entry.id}
-              onClick={() => onSelect(entry.query)}
-              className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-[#C9A96E]/[0.06] transition-colors group mb-0.5"
+              className="relative group mb-0.5"
             >
-              <p className="text-[13px] text-[#2A2118] truncate group-hover:text-[#2C3E6B] leading-snug">
-                {entry.query}
-              </p>
-              <div className="flex items-center gap-1.5 mt-1">
-                <span className="text-[10px] text-[#8B7D6B]/50">
-                  {formatRelativeTime(entry.timestamp, t)}
-                </span>
-                <span className="text-[#C9A96E]/30">·</span>
-                <span className="text-[10px] text-[#8B7D6B]/40 truncate">
-                  {entry.verseCount} {entry.verseCount > 1 ? t("history.verses") : t("history.verse")}
-                </span>
-              </div>
-            </button>
+              <button
+                onClick={() => onSelect(entry.query)}
+                className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-[#C9A96E]/[0.06] transition-colors pr-8"
+              >
+                <p className="text-[13px] text-[#2A2118] truncate group-hover:text-[#2C3E6B] leading-snug">
+                  {entry.query}
+                </p>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span className="text-[10px] text-[#8B7D6B]/50">
+                    {formatRelativeTime(entry.timestamp, t, language)}
+                  </span>
+                  <span className="text-[#C9A96E]/30">·</span>
+                  <span className="text-[10px] text-[#8B7D6B]/40 truncate">
+                    {entry.verseCount} {entry.verseCount > 1 ? t("history.verses") : t("history.verse")}
+                  </span>
+                </div>
+              </button>
+              {onDelete && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onDelete(entry.id)
+                  }}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-md text-[#8B7D6B]/0 group-hover:text-[#8B7D6B]/40 hover:!text-red-400 hover:bg-red-50 transition-all"
+                  title={t("history.delete")}
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+            </div>
           ))}
         </div>
       </div>
@@ -113,20 +145,36 @@ export function SearchHistory({
         }`}
       >
         {visible.map((entry) => (
-          <button
+          <div
             key={entry.id}
-            onClick={() => onSelect(entry.query)}
-            className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-[#C9A96E]/[0.06] transition-colors group"
+            className="relative group"
           >
-            <div className="flex items-center justify-between gap-2">
-              <p className="text-[13px] text-[#2A2118] truncate group-hover:text-[#2C3E6B]">
-                {entry.query}
-              </p>
-              <span className="text-[10px] text-[#8B7D6B]/40 whitespace-nowrap flex-shrink-0">
-                {formatRelativeTime(entry.timestamp, t)}
-              </span>
-            </div>
-          </button>
+            <button
+              onClick={() => onSelect(entry.query)}
+              className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-[#C9A96E]/[0.06] transition-colors pr-8"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-[13px] text-[#2A2118] truncate group-hover:text-[#2C3E6B]">
+                  {entry.query}
+                </p>
+                <span className="text-[10px] text-[#8B7D6B]/40 whitespace-nowrap flex-shrink-0">
+                  {formatRelativeTime(entry.timestamp, t, language)}
+                </span>
+              </div>
+            </button>
+            {onDelete && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onDelete(entry.id)
+                }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-md text-[#8B7D6B]/0 group-hover:text-[#8B7D6B]/40 hover:!text-red-400 hover:bg-red-50 transition-all"
+                title={t("history.delete")}
+              >
+                <X className="w-3 h-3" />
+              </button>
+            )}
+          </div>
         ))}
       </div>
 

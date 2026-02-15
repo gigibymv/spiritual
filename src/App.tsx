@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react"
+import { MessageCircle } from "lucide-react"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { Header } from "@/components/Header"
 import { WelcomeSection } from "@/components/WelcomeSection"
@@ -31,13 +32,14 @@ export default function App() {
     reference: string
     text: string
   } | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(true)
 
   const { search } = useVerseSearch()
   const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites()
-  const { history, addEntry, clearHistory } = useSearchHistory()
+  const { history, addEntry, deleteEntry, clearHistory } = useSearchHistory()
   const verseOfDay = useVerseOfDay()
   const greeting = useGreeting()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   const performSearch = useCallback(
     (searchQuery: string) => {
@@ -54,7 +56,8 @@ export default function App() {
         const response = generatePastoralResponse(
           searchQuery,
           results,
-          allMatchedKeywords
+          allMatchedKeywords,
+          language
         )
         setPastoralResponse(response)
         setView("response")
@@ -68,7 +71,7 @@ export default function App() {
         }
       }, 600)
     },
-    [search, addEntry]
+    [search, addEntry, language]
   )
 
   const handleSubmit = useCallback(() => {
@@ -121,17 +124,30 @@ export default function App() {
 
       <div className="max-w-6xl mx-auto flex">
         {/* LEFT SIDEBAR — conversations (desktop only) */}
-        {history.length > 0 && (
+        {history.length > 0 && sidebarOpen && (
           <aside className="hidden lg:block w-64 xl:w-72 flex-shrink-0 border-r border-[#E5DDD0]/40 sticky top-[57px] h-[calc(100vh-57px)] overflow-hidden">
             <div className="h-full flex flex-col">
               <SearchHistory
                 history={history}
                 onSelect={performSearch}
                 onClear={clearHistory}
+                onDelete={deleteEntry}
                 variant="sidebar"
+                onClose={() => setSidebarOpen(false)}
               />
             </div>
           </aside>
+        )}
+
+        {/* Reopen sidebar button (desktop only) */}
+        {history.length > 0 && !sidebarOpen && (
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="hidden lg:flex fixed left-3 top-[72px] z-40 items-center justify-center w-8 h-8 rounded-full bg-[#FFFDF9] border border-[#E5DDD0]/60 text-[#8B7D6B] hover:text-[#2C3E6B] hover:border-[#C9A96E]/40 transition-all shadow-sm"
+            title={t("history.conversations")}
+          >
+            <MessageCircle className="w-3.5 h-3.5" />
+          </button>
         )}
 
         {/* MAIN CONTENT */}
@@ -189,6 +205,7 @@ export default function App() {
                         history={history}
                         onSelect={performSearch}
                         onClear={clearHistory}
+                        onDelete={deleteEntry}
                         variant="inline"
                       />
                     )}

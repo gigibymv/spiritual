@@ -93,6 +93,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "history.justNow": "À l'instant",
     "history.verse": "verset",
     "history.verses": "versets",
+    "history.delete": "Supprimer cette conversation",
 
     // Auth
     "auth.signIn": "Se connecter",
@@ -132,6 +133,9 @@ export const translations: Record<Language, Record<string, string>> = {
     "intro.youMention": "Vous parlez de",
     "intro.andThisFeelingIsHuman": "et ce sentiment est profondément humain.",
     "intro.versesNote": "",
+
+    // Time
+    "time.days": "j",
   },
   en: {
     // Header
@@ -225,6 +229,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "history.justNow": "Just now",
     "history.verse": "verse",
     "history.verses": "verses",
+    "history.delete": "Delete this conversation",
 
     // Auth
     "auth.signIn": "Sign in",
@@ -237,23 +242,23 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.noAccount": "No account yet? Create one",
     "auth.hasAccount": "Already have an account? Sign in",
 
-    // Suggestions (kept in French — search keywords are French)
-    "suggestion.1": "Je me sens anxieux",
-    "suggestion.2": "J'ai besoin de pardonner",
-    "suggestion.3": "Je traverse un deuil",
-    "suggestion.4": "Je cherche un sens à ma vie",
-    "suggestion.5": "J'ai peur de l'avenir",
-    "suggestion.6": "Je suis en conflit avec quelqu'un",
-    "suggestion.7": "Je doute de ma foi",
-    "suggestion.8": "J'ai des difficultés financières",
-    "suggestion.9": "Je me sens seul",
-    "suggestion.10": "Je lutte contre une tentation",
-    "suggestion.11": "Je suis triste et découragé",
-    "suggestion.12": "J'ai besoin de prendre une décision",
-    "suggestion.13": "Je suis jaloux de quelqu'un",
-    "suggestion.14": "Je ressens de l'envie",
-    "suggestion.15": "Je vis une injustice",
-    "suggestion.16": "Je suis en colère",
+    // Suggestions
+    "suggestion.1": "I feel anxious",
+    "suggestion.2": "I need to forgive someone",
+    "suggestion.3": "I'm going through grief",
+    "suggestion.4": "I'm searching for meaning in life",
+    "suggestion.5": "I'm afraid of the future",
+    "suggestion.6": "I'm in conflict with someone",
+    "suggestion.7": "I doubt my faith",
+    "suggestion.8": "I have financial difficulties",
+    "suggestion.9": "I feel lonely",
+    "suggestion.10": "I'm struggling with temptation",
+    "suggestion.11": "I feel sad and discouraged",
+    "suggestion.12": "I need to make a decision",
+    "suggestion.13": "I'm jealous of someone",
+    "suggestion.14": "I feel envious",
+    "suggestion.15": "I'm facing injustice",
+    "suggestion.16": "I feel angry",
 
     // Footer
     "footer.translation": "Louis Segond Translation (1910) — Public domain",
@@ -265,5 +270,8 @@ export const translations: Record<Language, Record<string, string>> = {
       "and this feeling is deeply human.",
     "intro.versesNote":
       "Verses are shown in French (Louis Segond translation).",
+
+    // Time
+    "time.days": "d",
   },
 }
